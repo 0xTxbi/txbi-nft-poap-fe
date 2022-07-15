@@ -35,10 +35,7 @@ function App() {
   const [isContractOwner, setIsContractOwner] = useState(false);
   const [connectedContract, setConnectedContract] = useState(null);
 
-  console.log(isContractOwner);
-
-  console.log(connectedContract);
-
+  // Check if connected wallet is the contract's owner
   useEffect(() => {
     const checkIfContractOwner = async () => {
       if (!address || !connectedContract) return;
@@ -55,8 +52,8 @@ function App() {
     checkIfContractOwner();
   }, [address, connectedContract]);
 
+  // retrieve previously connected wallet
   useEffect(() => {
-    // retrieve previously connected wallet
     if (!address) {
       const prevConnectedWallet =
         window.localStorage.getItem("txbitix-address");
@@ -82,6 +79,7 @@ function App() {
     setConnectedContract(connectedContract);
   };
 
+  // retrieve contract details
   useEffect(() => {
     getConnectedContract();
   }, []);
@@ -201,7 +199,15 @@ function App() {
 
             <Route path="/check-in" element={<CheckIn />} />
 
-            <Route path="/admin" element={<Admin />} />
+            <Route
+              path="/admin"
+              element={
+                <Admin
+                  isContractOwner={isContractOwner}
+                  connectedContract={connectedContract}
+                />
+              }
+            />
 
             <Route path="/wallet" element={<Wallet />} />
           </Routes>
