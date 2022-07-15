@@ -1,7 +1,4 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
-
-import logo from "./images/txbi.jpeg";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEthereum } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -9,7 +6,6 @@ import {
   faTools,
   faTicketAlt,
 } from "@fortawesome/free-solid-svg-icons";
-
 import Connect from "./components/Connect";
 import {
   Button,
@@ -21,21 +17,32 @@ import {
   MenuItem,
   MenuDivider,
 } from "@chakra-ui/react";
-
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
-
+import logo from "./images/txbi.jpeg";
 import Admin from "./pages/Admin";
 import Buy from "./pages/Buy";
 import CheckIn from "./pages/CheckIn";
 import Page from "./layouts/Page";
 import Wallet from "./pages/Wallet";
+import { useState } from "react";
 
 function App() {
   const navigate = useNavigate();
 
+  const [address, setAddress] = useState(null);
+  console.log(address);
+
   return (
     <>
-      <Connect />
+      <Connect
+        address={address}
+        onConnect={(address) => {
+          setAddress(address);
+        }}
+        onDisconnect={() => {
+          setAddress(null);
+        }}
+      />
       <Page>
         <Menu
           left="0"
