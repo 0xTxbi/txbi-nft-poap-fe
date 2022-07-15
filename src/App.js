@@ -25,12 +25,16 @@ import CheckIn from "./pages/CheckIn";
 import Page from "./layouts/Page";
 import Wallet from "./pages/Wallet";
 import { useEffect, useState } from "react";
+import { ethers } from "ethers";
+import txbiTix from "./contracts/txbiTix.json";
 
 function App() {
   const navigate = useNavigate();
 
   const [address, setAddress] = useState(null);
-  console.log(address);
+  const [connectedContract, setConnectedContract] = useState(null);
+
+  console.log(connectedContract);
 
   useEffect(() => {
     // retrieve previously connected wallet
@@ -43,6 +47,25 @@ function App() {
       }
     }
   }, [address]);
+
+  // connected contract
+  const getConnectedContract = async () => {
+    const { ethereum } = window;
+    if (!ethereum) return;
+
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const signer = provider.getSigner();
+    const connectedContract = new ethers.Contract(
+      process.env.REACT_APP_CONTRACT_ID,
+      txbiTix.abi,
+      signer
+    );
+    setConnectedContract(connectedContract);
+  };
+
+  useEffect(() => {
+    getConnectedContract();
+  }, []);
 
   return (
     <>
