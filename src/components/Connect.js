@@ -15,7 +15,9 @@ function Connect({ address, onConnect, onDisconnect }) {
         method: "eth_requestAccounts",
       });
       onConnect(userAccounts[0]);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // disconnect wallet

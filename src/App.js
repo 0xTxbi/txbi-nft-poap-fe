@@ -24,7 +24,7 @@ import Buy from "./pages/Buy";
 import CheckIn from "./pages/CheckIn";
 import Page from "./layouts/Page";
 import Wallet from "./pages/Wallet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
   const navigate = useNavigate();
@@ -32,15 +32,33 @@ function App() {
   const [address, setAddress] = useState(null);
   console.log(address);
 
+  useEffect(() => {
+    // retrieve previously connected wallet
+    if (!address) {
+      const prevConnectedWallet =
+        window.localStorage.getItem("txbitix-address");
+
+      if (prevConnectedWallet) {
+        setAddress(prevConnectedWallet);
+      }
+    }
+  }, [address]);
+
   return (
     <>
       <Connect
         address={address}
         onConnect={(address) => {
           setAddress(address);
+
+          // cache details to local storage
+          window.localStorage.setItem("txbitix-address", address);
         }}
         onDisconnect={() => {
           setAddress(null);
+
+          // remove address cache from local storage
+          window.localStorage.removeItem("txbitix-address");
         }}
       />
       <Page>
