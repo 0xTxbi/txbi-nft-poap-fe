@@ -32,9 +32,28 @@ function App() {
   const navigate = useNavigate();
 
   const [address, setAddress] = useState(null);
+  const [isContractOwner, setIsContractOwner] = useState(false);
   const [connectedContract, setConnectedContract] = useState(null);
 
+  console.log(isContractOwner);
+
   console.log(connectedContract);
+
+  useEffect(() => {
+    const checkIfContractOwner = async () => {
+      if (!address || !connectedContract) return;
+
+      const ownerAddress = await connectedContract.owner();
+
+      if (address.toLowerCase() === ownerAddress.toLowerCase()) {
+        setIsContractOwner(true);
+      } else {
+        setIsContractOwner(false);
+      }
+    };
+
+    checkIfContractOwner();
+  }, [address, connectedContract]);
 
   useEffect(() => {
     // retrieve previously connected wallet
@@ -129,7 +148,10 @@ function App() {
                   </Flex>
                 </MenuItem>
                 <MenuDivider />
-                <MenuItem onClick={() => navigate("/check-in")}>
+                <MenuItem
+                  isDisabled={!isContractOwner}
+                  onClick={() => navigate("/check-in")}
+                >
                   <Flex
                     alignItems="center"
                     flexDirection="row"
@@ -141,7 +163,10 @@ function App() {
                   </Flex>
                 </MenuItem>
                 <MenuDivider />
-                <MenuItem onClick={() => navigate("/admin")}>
+                <MenuItem
+                  isDisabled={!isContractOwner}
+                  onClick={() => navigate("/admin")}
+                >
                   <Flex
                     alignItems="center"
                     flexDirection="row"
