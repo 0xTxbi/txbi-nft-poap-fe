@@ -82,6 +82,7 @@ function App() {
   // retrieve contract details
   useEffect(() => {
     getConnectedContract();
+    console.log(connectedContract);
   }, []);
 
   return (
@@ -195,7 +196,10 @@ function App() {
             boxSize="100px"
           />
           <Routes>
-            <Route path="/" element={<Buy />} />
+            <Route
+              path="/"
+              element={<Buy connectedContract={connectedContract} />}
+            />
 
             <Route path="/check-in" element={<CheckIn />} />
 

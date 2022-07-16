@@ -6,8 +6,41 @@ import {
   Flex,
   Container,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useState } from "react";
 
-function Buy() {
+function Buy({ connectedContract }) {
+  const [totalTicketNumber, setTotalTicketNumber] = useState(null);
+  const [numberOfAvailableTickets, setNumberOfAvailableTickets] =
+    useState(null);
+
+  useEffect(() => {
+    if (!connectedContract) return;
+
+    getNumberOfAvailableTickets();
+    getTotalTicketNumber();
+  }, []);
+
+  // Obtain number of available tickets
+  const getNumberOfAvailableTickets = async () => {
+    try {
+      const count = await connectedContract.availableTicketCount();
+      setNumberOfAvailableTickets(count.toNumber());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Obtain total number of tickets
+  const getTotalTicketNumber = async () => {
+    try {
+      const count = await connectedContract.totalTicketCount();
+      setTotalTicketNumber(count.toNumber());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Container centerContent>
@@ -28,6 +61,11 @@ function Buy() {
             Buy Ticket
           </Button>
         </ButtonGroup>
+        {numberOfAvailableTickets && totalTicketNumber && (
+          <Text>
+            {numberOfAvailableTickets} of {totalTicketNumber}minted.
+          </Text>
+        )}
       </Flex>
     </>
   );
