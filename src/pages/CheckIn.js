@@ -16,6 +16,44 @@ function CheckIn({ connectedContract }) {
   const [displayQRScanner, setDisplayQRScanner] = useState(false);
   const [scannedAddress, setScannedAddress] = useState(null);
   const [ownsTicket, setOwnsTicket] = useState(false);
+  const [checkInTxnPending, setCheckInTxnPending] = useState(false);
+
+  const checkIn = async () => {
+    try {
+      if (!connectedContract) return;
+
+      setCheckInTxnPending(true);
+      const checkInTxn = await connectedContract.checkIn(scannedAddress);
+
+      await checkInTxn.wait();
+      setCheckInTxnPending(false);
+
+      toast({
+        status: "success",
+        title: "Checked In",
+        description: (
+          <p>
+            Check transaction on{" "}
+            <a
+              href={`https://rinkeby.etherscan.io/tx/${checkInTxn.hash}`}
+              target="_blank"
+              rel="nofollow noreferrer"
+            >
+              Etherscan
+            </a>
+          </p>
+        ),
+      });
+    } catch (error) {
+      console.log(error);
+      setCheckInTxnPending(false);
+      toast({
+        title: "Check In Failed",
+        variant: "error",
+        description: error,
+      });
+    }
+  };
 
   useEffect(() => {
     const confirmTicketOwnership = async () => {
@@ -46,7 +84,15 @@ function CheckIn({ connectedContract }) {
         <>
           <Text mb={5}>You own a Txbi's Event ticket</Text>
           <Flex width="100%" justifyContent="center">
-            <Button size="lg">Check In</Button>
+            <Button
+              onClick={checkIn}
+              isLoading={checkInTxnPending}
+              loadingText="Checking in"
+              size="lg"
+              colorScheme="blue"
+            >
+              Check In
+            </Button>
           </Flex>
         </>
       )}
