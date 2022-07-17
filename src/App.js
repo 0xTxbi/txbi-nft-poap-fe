@@ -201,7 +201,11 @@ function App() {
               element={<Buy connectedContract={connectedContract} />}
             />
 
-            <Route path="/check-in" element={<CheckIn />} />
+            <Route
+              path="/check-in"
+              element={<CheckIn />}
+              connectedContract={connectedContract}
+            />
 
             <Route
               path="/admin"
