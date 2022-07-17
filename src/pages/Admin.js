@@ -43,7 +43,6 @@ function Admin({ isContractOwner, connectedContract }) {
         ),
       });
     } catch (error) {
-      console.log(error);
       setOpenTicketSaleTxnPending(false);
       toast({
         status: "error",
@@ -81,7 +80,6 @@ function Admin({ isContractOwner, connectedContract }) {
         ),
       });
     } catch (error) {
-      console.log(error);
       setCloseTicketSaleTxnPending(false);
       toast({
         status: "error",
